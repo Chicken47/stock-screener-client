@@ -38,9 +38,9 @@ const Page = () => {
   const [chartType, setChartType] = useState("price");
 
   const unselected =
-    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] transition-all rounded-full cursor-pointer hover:font-bold";
+    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] md:text-[13px] transition-all rounded-full cursor-pointer hover:font-bold";
   const selected =
-    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] bg-[#FFFF00] text-black cursor-pointer hover:font-bold transition-all rounded-full";
+    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] md:text-[13px] bg-[#FFFF00] text-black cursor-pointer hover:font-bold transition-all rounded-full";
 
   useEffect(() => {
     console.log("akshit", ratios);
