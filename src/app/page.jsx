@@ -19,6 +19,7 @@ import {
   Cell,
 } from "recharts";
 import axios from "axios";
+import mixpanel from "mixpanel-browser";
 
 const Page = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,9 +43,10 @@ const Page = () => {
   const selected =
     "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] md:text-[13px] bg-[#FFFF00] text-black cursor-pointer hover:font-bold transition-all rounded-full";
 
+  mixpanel.init("dcc97e50489f64a322bcd4ab4cf2e74c", { debug: true });
   useEffect(() => {
-    console.log("akshit", ratios);
-  });
+    mixpanel.track("Stoked");
+  }, []);
 
   const numberOfDays = (time) => {
     switch (time) {
