@@ -27,18 +27,20 @@ const Page = () => {
   const [encodedSecret, setEncodedSecret] = useState("");
   const [selectedStockData, setSelectedStockData] = useState();
   const [shareholdingData, setShareholdingData] = useState([]);
+  const [peData, setPeData] = useState([]);
   const [aboutText, setAboutText] = useState("");
   const [ratios, setRatios] = useState([]);
   const [pros, setPros] = useState([]);
   const [cons, setCons] = useState([]);
   const [news, setNews] = useState([]);
-  const [selectedQuarter, setSelectedQuarter] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [timeSeries, setTimeSeries] = useState("1yr");
+  const [chartType, setChartType] = useState("price");
 
   const unselected =
-    "px-3 py-3 transition-all rounded-full cursor-pointer hover:font-bold";
+    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] transition-all rounded-full cursor-pointer hover:font-bold";
   const selected =
-    "px-3 py-3 bg-[#FFFF00] text-black cursor-pointer hover:font-bold transition-all rounded-full";
+    "px-[5px] md:px-3 py-[5px] md:py-3 text-[10px] bg-[#FFFF00] text-black cursor-pointer hover:font-bold transition-all rounded-full";
 
   useEffect(() => {
     console.log("akshit", ratios);
@@ -59,7 +61,7 @@ const Page = () => {
       case "max":
         return 10000;
       default:
-        return 0; // Invalid time frame
+        return 0;
     }
   };
 
@@ -71,9 +73,8 @@ const Page = () => {
       encodedSecret: encodedSecret,
     };
     try {
-      // Make the API request using Axios
       const response = await axios.post(
-        "http://localhost:6969/v1/timeSeriesStockData",
+        "https://stock-screener-server.onrender.com/v1/timeSeriesStockData",
         data
       );
       console.log("result", response.data);
@@ -86,15 +87,17 @@ const Page = () => {
 
   useEffect(() => {
     handleTimeSeries();
+    fetchPeData();
   }, [timeSeries]);
 
   const getChartData = async (url) => {
+    setLoading(true);
     const data = {
       url: url,
     };
     try {
       const response = await axios.post(
-        "http://localhost:6969/v1/getStockData",
+        "https://stock-screener-server.onrender.com/v1/getStockData",
         data
       );
       console.log("stockData", response.data);
@@ -107,12 +110,13 @@ const Page = () => {
       setAboutText(response.data.aboutText);
       setNews(response.data.newsDetails);
       setTimeSeries("1yr");
+      setLoading(false);
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: "smooth",
       });
     } catch (error) {
-      // Log any errors that occur during the request
+      setLoading(false);
       console.error("Error:", error);
     }
   };
@@ -127,9 +131,12 @@ const Page = () => {
     const fetchData = async () => {
       if (searchTerm !== "") {
         try {
-          const response = await axios.post("http://localhost:6969/v1/search", {
-            searchQuery: searchTerm,
-          });
+          const response = await axios.post(
+            "https://stock-screener-server.onrender.com/v1/search",
+            {
+              searchQuery: searchTerm,
+            }
+          );
 
           setOptions(response.data);
         } catch (error) {
@@ -143,16 +150,32 @@ const Page = () => {
     fetchData();
   }, [searchTerm]);
 
+  const fetchPeData = async () => {
+    const timeInDays = numberOfDays(timeSeries);
+    try {
+      const response = await axios.post(
+        "https://stock-screener-server.onrender.com/v1/timeSeriesPriceToEarningData",
+        {
+          timeSeries: timeInDays,
+          encodedSecret: encodedSecret,
+        }
+      );
+      setPeData(response.data.datasets[1].values);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const parseData = (data) => {
     return data?.map(([date, value]) => ({
       date,
-      value: parseFloat(value), // convert value to a number
+      value: parseFloat(value),
     }));
   };
   const chartData = parseData(selectedStockData);
+  const peChartData = parseData(peData);
 
   function getColorBasedOnIndex(index) {
-    // Define your color mapping based on index or any other criteria
     const colors = ["#82ca9d", "#8884d8", "#ffc658", "#ff7300", "#e44d25"];
     return colors[index % colors.length];
   }
@@ -175,9 +198,11 @@ const Page = () => {
           id="header"
           className="w-full bg-[#282828] py-3 rounded-full text-white px-10 flex items-center justify-between"
         >
-          <div className="font-extrabold text-[1.5vw]">STOKED</div>
-          <div>(mid indices)</div>
-          <div>(right buttons)</div>
+          <div className="font-extrabold w-full text-center text-[20px]">
+            STOKED
+          </div>
+          {/* <div>(mid indices)</div>
+          <div>(right buttons)</div> */}
         </div>
         <div
           id="search"
@@ -185,26 +210,38 @@ const Page = () => {
         >
           <Autocomplete
             options={options}
-            className="font-bold text-white"
-            getOptionLabel={(option) => option.name} // Replace 'label' with the key containing the display text
-            style={{ width: "50%", color: "white" }}
+            className="w-11/12 font-bold text-white md:w-1/2"
+            getOptionLabel={(option) => option.name}
+            // style={{ width: "50%", color: "white" }}
+            // sx={{ width: "50%", color: "white" }}
             onChange={(event, value) => handleOptionClick(value)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 placeholder="Search"
                 variant="standard"
-                className="font-bold text-white"
+                // InputProps={{
+                //   sx: { color: "white" },
+                //   className: "text-white",
+                // }}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             )}
           />
         </div>
-        {chartData && (
-          <div className="flex w-full h-full max-h-full text-white text-[13px]">
+        {loading ? (
+          <div className="flex items-center justify-center w-full h-full">
+            <img
+              src="https://media.giphy.com/media/L05HgB2h6qICDs5Sms/giphy.gif"
+              className="w-1/2 md:w-1/5"
+              alt="Loading"
+            />
+          </div>
+        ) : chartData ? (
+          <div className="flex flex-col md:flex-row w-full h-full max-h-full text-white text-[13px]">
             <div
               id="proconsAndShare"
-              className="flex flex-col items-center w-1/4 text-[14px] h-full p-2"
+              className="hidden md:flex flex-col items-center md:w-1/4 text-[14px] h-full p-2"
             >
               <div
                 id="pros"
@@ -239,7 +276,7 @@ const Page = () => {
                 className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 h-3/5 hover:h-full transition-all overflow-hidden"
               >
                 <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
-                  SHAREHOLDING PATTERN
+                  SHAREHOLDING DATA
                 </span>
                 <ResponsiveContainer>
                   <PieChart>
@@ -266,16 +303,19 @@ const Page = () => {
             </div>
             <div
               id="ratioAndChart"
-              className="flex flex-col items-center w-1/2 h-full py-2"
+              className="flex flex-col items-center h-full px-2 py-2 md:px-0 md:w-1/2"
             >
               <div
                 id="ratios"
-                className="flex items-center w-full bg-gradient-to-b mb-2 from-[#212121] to-[#3b3a3a] rounded-[30px] overflow-hidden pl-3 h-[30%]"
+                className="flex justify-between items-center w-full bg-gradient-to-b mb-2 from-[#212121] to-[#3b3a3a] rounded-[30px] overflow-hidden md:pl-3 md:h-[30%]"
               >
-                <div className="w-[10%] h-[90%] bg-black rounded-[30px] flex items-center justify-center">
+                <div
+                  // onClick={() => setC}
+                  className="w-[10%] h-[90%] bg-black rounded-[30px] hidden md:flex items-center justify-center"
+                >
                   <MdOutlineCancel className="w-[40px] h-[40px]" />
                 </div>
-                <div className="w-[30%] h-full text-[20px] xl:font-[28px] justify-evenly font-bold p-2 px-4 flex flex-col">
+                <div className="w-[30%] h-full md:text-[20px] xl:font-[28px] justify-evenly font-bold p-10 md:p-5 px-4 flex flex-col">
                   <span>{name}</span>
                   <span>
                     ₹{" "}
@@ -292,7 +332,7 @@ const Page = () => {
                 <div className="w-[60%] h-full bg-[#FFFF00] rounded-[30px] flex overflow-hidden text-black">
                   <div className="flex flex-col w-1/3 h-full">
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[22px]">
+                      <span className="md:text-[22px]">
                         ₹{" "}
                         {
                           ratios.find((item) => item.name === "Current Price")
@@ -304,7 +344,7 @@ const Page = () => {
                       </span>
                     </div>
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[22px]">
+                      <span className="md:text-[22px]">
                         ₹{" "}
                         {
                           ratios.find((item) => item.name === "Stock P/E")
@@ -316,7 +356,7 @@ const Page = () => {
                   </div>
                   <div className="flex flex-col w-1/3 h-full">
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[130%]">
+                      <span className="md:text-[130%] text-[10px]">
                         ₹{" "}
                         {
                           ratios.find((item) => item.name === "Market Cap")
@@ -327,7 +367,7 @@ const Page = () => {
                       <span className="font-bold text-[10px]">Market Cap</span>
                     </div>
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[22px]">
+                      <span className="md:text-[22px]">
                         {ratios.find((item) => item.name === "ROCE")?.value}%
                       </span>
                       <span className="font-bold text-[10px]">ROCE</span>
@@ -335,7 +375,7 @@ const Page = () => {
                   </div>
                   <div className="flex flex-col w-1/3 h-full">
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[22px]">
+                      <span className="md:text-[22px]">
                         ₹{" "}
                         {
                           ratios.find((item) => item.name === "Book Value")
@@ -345,7 +385,7 @@ const Page = () => {
                       <span className="font-bold text-[10px]">Book Value</span>
                     </div>
                     <div className="flex flex-col items-center justify-center w-full h-1/2">
-                      <span className="text-[22px]">
+                      <span className="md:text-[22px]">
                         {" "}
                         {ratios.find((item) => item.name === "ROE")?.value}%
                       </span>
@@ -359,7 +399,7 @@ const Page = () => {
                 className="w-full bg-[#141414] h-[70%] rounded-[30px] overflow-hidden flex flex-col"
               >
                 <div className="w-full flex h-[15%] px-3 py-3 items-center justify-between">
-                  <div className="flex px-4 bg-gray-800 rounded-full">
+                  <div className="flex px-2 bg-gray-800 rounded-full md:px-4">
                     <span
                       onClick={() => setTimeSeries("1m")}
                       className={timeSeries === "1m" ? selected : unselected}
@@ -397,15 +437,28 @@ const Page = () => {
                       Max
                     </span>
                   </div>
-                  <div className="flex px-8 py-3 space-x-6 bg-gray-800 rounded-full">
-                    <span>Price</span>
-                    <span>PE Ratio</span>
+                  <div className="flex px-2 bg-gray-800 rounded-full md:px-4">
+                    <span
+                      className={chartType === "price" ? selected : unselected}
+                      onClick={() => setChartType("price")}
+                    >
+                      Price
+                    </span>
+                    <span
+                      className={chartType === "pe" ? selected : unselected}
+                      onClick={() => {
+                        fetchPeData();
+                        setChartType("pe");
+                      }}
+                    >
+                      PE Ratio
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center w-full h-full text-black">
                   <ResponsiveContainer height={"80%"}>
                     <LineChart
-                      data={chartData}
+                      data={chartType === "price" ? chartData : peChartData}
                       margin={{ top: 0, right: 50, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid
@@ -441,15 +494,18 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div id="aboutAndNews" className="flex flex-col w-1/4 h-full p-2">
+            <div
+              id="aboutAndNews"
+              className="flex flex-col h-full p-2 md:w-1/4"
+            >
               <div
                 id="about"
-                className="flex flex-col w-full rounded-[30px] bg-[#121212] p-3 h-1/2 max-h-1/2"
+                className="flex flex-col w-full rounded-[30px] bg-[#121212] p-3 md:h-1/2 md:max-h-1/2"
               >
                 <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
                   ABOUT
                 </span>
-                <span className="text-[13px] w-full p-3 overflow-y-scroll overflow-hidden">
+                <span className="text-[13px] w-full p-3 hover:overflow-y-scroll overflow-hidden">
                   {aboutText}
                 </span>
               </div>
@@ -460,7 +516,7 @@ const Page = () => {
                 <span className="p-2 font-bold text-[#FFFF00]">
                   IN THE NEWS
                 </span>
-                <div className="flex flex-col overflow-y-scroll">
+                <div className="flex flex-col overflow-hidden hover:overflow-y-scroll">
                   {news?.map((newsItem) => (
                     <div
                       onClick={() => window.open(newsItem.linkToNews, "_blank")}
@@ -473,8 +529,72 @@ const Page = () => {
                 </div>
               </div>
             </div>
+            <div
+              id="proconsAndShare"
+              className="md:hidden flex flex-col items-center md:w-1/4 text-[14px] min-h-full p-2"
+            >
+              <div
+                id="pros"
+                className="w-full rounded-[30px] bg-gradient-to-br  from-[#0F6F13] to-[#021B03] px-8 py-5 h-auto transition-all"
+              >
+                <span className="py-2 font-bold text-white">
+                  <mark>PROS</mark>
+                </span>
+                {pros?.map((pro, index) => (
+                  <div key={index} className="mt-1">
+                    - {pro}
+                    <br />
+                  </div>
+                ))}
+              </div>
+              <div
+                id="cons"
+                className="w-full rounded-[30px] px-8 bg-gradient-to-br from-[#810A0A] to-[#170606] my-2 py-5 h-auto transition-all"
+              >
+                <span className="py-2 font-bold text-white">
+                  <mark>CONS</mark>
+                </span>
+                {cons?.map((con, index) => (
+                  <div key={index} className="mt-1">
+                    - {con}
+                    <br />
+                  </div>
+                ))}
+              </div>
+              <div
+                id="sharePieChart"
+                className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 transition-all"
+              >
+                <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
+                  SHAREHOLDING DATA
+                </span>
+                <div className="h-[400px]">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={pieChartData}
+                        dataKey={"value"}
+                        name="name"
+                        cx="50%"
+                        cy="50%"
+                        // innerRadius={60}
+                        outerRadius={80}
+                        fill="#82ca9d"
+                        label
+                      >
+                        {pieChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend verticalAlign="bottom" height={100} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
