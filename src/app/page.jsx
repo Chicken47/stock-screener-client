@@ -472,9 +472,15 @@ const Page = () => {
                         dataKey="date"
                         tickFormatter={(value) => {
                           const date = new Date(value);
-                          return `${date.toLocaleString("en-US", {
-                            month: "long",
-                          })} ${date.getFullYear()}`;
+                          const monthAbbreviation = date.toLocaleString(
+                            "en-US",
+                            { month: "short" }
+                          );
+                          const yearAbbreviation = date
+                            .getFullYear()
+                            .toString()
+                            .slice(2, 4);
+                          return `${monthAbbreviation}${yearAbbreviation}`;
                         }}
                       />
                       <YAxis color="#FFFF00" domain={["dataMin", "dataMax"]} />{" "}
