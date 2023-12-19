@@ -232,12 +232,136 @@ const Page = () => {
           />
         </div>
         {loading ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <img
-              src="https://media.giphy.com/media/L05HgB2h6qICDs5Sms/giphy.gif"
-              className="w-1/2 md:w-1/5"
-              alt="Loading"
-            />
+          <div className="flex flex-col md:flex-row w-full h-full max-h-full text-white text-[13px]">
+            <div
+              id="proconsAndShare"
+              className="hidden md:flex flex-col items-center md:w-1/4 text-[14px] h-full p-2"
+            >
+              <div
+                id="pros"
+                className="w-full rounded-[30px] bg-gradient-to-br hover:overflow-y-scroll overflow-hidden animate-pulse from-[#0f6f1263] to-[#021b0369] px-8 py-5 h-1/4 hover:h-auto transition-all"
+              >
+                {/* PROS */}
+              </div>
+              <div
+                id="cons"
+                className="w-full rounded-[30px] animate-pulse px-8 bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 py-5 h-1/4 hover:h-auto hover:overflow-y-scroll overflow-hidden transition-all"
+              >
+                {/* CONS */}
+              </div>
+              <div
+                id="sharePieChart"
+                className="w-full flex flex-col rounded-[30px] animate-pulse bg-[#1414146c] p-5 h-1/2 hover:h-full transition-all overflow-hidden"
+              >
+                {/* PIE CHART */}
+              </div>
+            </div>
+            <div
+              id="ratioAndChart"
+              className="flex flex-col items-center h-full px-2 py-2 md:px-0 md:w-1/2"
+            >
+              <div
+                id="ratios"
+                className="flex justify-between items-center w-full bg-gradient-to-b mb-2 from-[#212121] to-[#3b3a3a] rounded-[30px] overflow-hidden md:pl-3 md:h-[30%]"
+              >
+                <div className="w-[10%] h-[90%] animate-pulse bg-[#00000039] rounded-[30px] hidden md:flex items-center justify-center">
+                  <MdOutlineCancel className="w-[40px] h-[40px]" />
+                </div>
+                <div className="w-[30%] h-full md:text-[20px] xl:font-[28px] animate-pulse justify-evenly font-bold p-10 md:p-5 px-4 flex flex-col">
+                  {/* NAME */}
+                </div>
+                <div className="w-[60%] h-full bg-[#ffff002f] animate-pulse rounded-[30px] flex overflow-hidden text-black">
+                  {/* RATIOS */}
+                </div>
+              </div>
+              <div
+                id="chart"
+                className="w-full bg-[#1414146c] animate-pulse h-[70%] rounded-[30px] overflow-hidden flex flex-col"
+              >
+                {/* CHART */}
+              </div>
+            </div>
+            <div
+              id="aboutAndNews"
+              className="flex flex-col h-full p-2 md:w-1/4"
+            >
+              <div
+                id="about"
+                className="flex animate-pulse flex-col w-full rounded-[30px] bg-[#1414146c] p-3 md:h-1/2 md:max-h-1/2"
+              >
+                {/* ABOUT */}
+              </div>
+              <div
+                id="news"
+                className="mt-2 animate-pulse rounded-[30px] flex flex-col p-3 h-1/2 max-h-1/2 bg-[#1414146c] overflow-hidden"
+              >
+                {/* NEWS */}
+              </div>
+            </div>
+            <div
+              id="proconsAndShare"
+              className="md:hidden flex flex-col items-center md:w-1/4 text-[14px] min-h-full p-2"
+            >
+              <div
+                id="pros"
+                className="w-full rounded-[30px] bg-gradient-to-br  from-[#0F6F13] to-[#021B03] px-8 py-5 h-auto transition-all"
+              >
+                <span className="py-2 font-bold text-white">
+                  <mark>PROS</mark>
+                </span>
+                {pros?.map((pro, index) => (
+                  <div key={index} className="mt-1">
+                    - {pro}
+                    <br />
+                  </div>
+                ))}
+              </div>
+              <div
+                id="cons"
+                className="w-full rounded-[30px] px-8 bg-gradient-to-br from-[#810A0A] to-[#170606] my-2 py-5 h-auto transition-all"
+              >
+                <span className="py-2 font-bold text-white">
+                  <mark>CONS</mark>
+                </span>
+                {cons?.map((con, index) => (
+                  <div key={index} className="mt-1">
+                    - {con}
+                    <br />
+                  </div>
+                ))}
+              </div>
+              <div
+                id="sharePieChart"
+                className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 transition-all"
+              >
+                <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
+                  SHAREHOLDING DATA
+                </span>
+                <div className="h-[400px]">
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={pieChartData}
+                        dataKey={"value"}
+                        name="name"
+                        cx="50%"
+                        cy="50%"
+                        // innerRadius={60}
+                        outerRadius={80}
+                        fill="#82ca9d"
+                        label
+                      >
+                        {pieChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                      <Legend verticalAlign="bottom" height={100} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
           </div>
         ) : chartData ? (
           <div className="flex flex-col md:flex-row w-full h-full max-h-full text-white text-[13px]">
@@ -252,6 +376,12 @@ const Page = () => {
                 <span className="py-2 font-bold text-white">
                   <mark>PROS</mark>
                 </span>
+                {pros.length === 0 && (
+                  <div>
+                    <br />
+                    No automatically generated pros.
+                  </div>
+                )}
                 {pros?.map((pro, index) => (
                   <div key={index} className="mt-1">
                     - {pro}
@@ -266,6 +396,12 @@ const Page = () => {
                 <span className="py-2 font-bold text-white">
                   <mark>CONS</mark>
                 </span>
+                {cons.length === 0 && (
+                  <div>
+                    <br />
+                    No automatically generated cons.
+                  </div>
+                )}
                 {cons?.map((con, index) => (
                   <div key={index} className="mt-1">
                     - {con}
