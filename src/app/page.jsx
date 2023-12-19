@@ -298,73 +298,9 @@ const Page = () => {
                 {/* NEWS */}
               </div>
             </div>
-            {/* <div
-              id="proconsAndShare"
-              className="md:hidden flex flex-col items-center md:w-1/4 text-[14px] min-h-full p-2"
-            >
-              <div
-                id="pros"
-                className="w-full rounded-[30px] bg-gradient-to-br  from-[#0F6F13] to-[#021B03] px-8 py-5 h-auto transition-all"
-              >
-                <span className="py-2 font-bold text-white">
-                  <mark>PROS</mark>
-                </span>
-                {pros?.map((pro, index) => (
-                  <div key={index} className="mt-1">
-                    - {pro}
-                    <br />
-                  </div>
-                ))}
-              </div>
-              <div
-                id="cons"
-                className="w-full rounded-[30px] px-8 bg-gradient-to-br from-[#810A0A] to-[#170606] my-2 py-5 h-auto transition-all"
-              >
-                <span className="py-2 font-bold text-white">
-                  <mark>CONS</mark>
-                </span>
-                {cons?.map((con, index) => (
-                  <div key={index} className="mt-1">
-                    - {con}
-                    <br />
-                  </div>
-                ))}
-              </div>
-              <div
-                id="sharePieChart"
-                className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 transition-all"
-              >
-                <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
-                  SHAREHOLDING DATA
-                </span>
-                <div className="h-[400px]">
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Pie
-                        data={pieChartData}
-                        dataKey={"value"}
-                        name="name"
-                        cx="50%"
-                        cy="50%"
-                        // innerRadius={60}
-                        outerRadius={80}
-                        fill="#82ca9d"
-                        label
-                      >
-                        {pieChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend verticalAlign="bottom" height={100} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div> */}
           </div>
         ) : chartData ? (
-          <div className="flex flex-col md:flex-row w-full h-full max-h-full text-white text-[13px]">
+          <div className="flex flex-col md:flex-row w-full h-auto md:h-full md:max-h-full text-white text-[13px]">
             <div
               id="proconsAndShare"
               className="hidden md:flex flex-col items-center md:w-1/4 text-[14px] h-full p-2"
@@ -404,7 +340,7 @@ const Page = () => {
                 )}
                 {cons?.map((con, index) => (
                   <div key={index} className="mt-1">
-                    - {con}
+                    - <span className="">{con}</span>
                     <br />
                   </div>
                 ))}
@@ -534,7 +470,7 @@ const Page = () => {
               </div>
               <div
                 id="chart"
-                className="w-full bg-[#141414] h-[70%] rounded-[30px] overflow-hidden flex flex-col"
+                className="w-full bg-[#141414] h-[70%] rounded-[30px] overflow-hidden flex mt-5 md:mt-0 flex-col"
               >
                 <div className="w-full flex h-[15%] px-3 py-3 items-center justify-between">
                   <div className="flex px-2 bg-gray-800 rounded-full md:px-4">
@@ -655,7 +591,7 @@ const Page = () => {
               </div>
               <div
                 id="news"
-                className="mt-2 rounded-[30px] flex flex-col p-3 h-1/2 max-h-1/2 bg-[#121212] overflow-hidden"
+                className="mt-2 rounded-[30px] hidden md:flex flex-col p-3 h-1/2 max-h-1/2 bg-[#121212] overflow-hidden"
               >
                 <span className="p-2 font-bold text-[#FFFF00]">
                   IN THE NEWS
@@ -685,7 +621,7 @@ const Page = () => {
                   <mark>PROS</mark>
                 </span>
                 {pros?.map((pro, index) => (
-                  <div key={index} className="mt-1">
+                  <div key={index} className="mt-1 text-[12px]">
                     - {pro}
                     <br />
                   </div>
@@ -699,7 +635,7 @@ const Page = () => {
                   <mark>CONS</mark>
                 </span>
                 {cons?.map((con, index) => (
-                  <div key={index} className="mt-1">
+                  <div key={index} className="mt-1 text-[12px]">
                     - {con}
                     <br />
                   </div>
@@ -712,7 +648,7 @@ const Page = () => {
                 <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
                   SHAREHOLDING DATA
                 </span>
-                <div className="h-[400px]">
+                <div className="h-[300px]">
                   <ResponsiveContainer>
                     <PieChart>
                       <Pie
@@ -731,9 +667,28 @@ const Page = () => {
                         ))}
                       </Pie>
                       <Tooltip />
-                      <Legend verticalAlign="bottom" height={100} />
+                      <Legend verticalAlign="bottom" height={50} />
                     </PieChart>
                   </ResponsiveContainer>
+                </div>
+              </div>
+              <div
+                id="news"
+                className="mt-2 rounded-[30px] md:hidden flex flex-col p-3 h-auto bg-[#121212] overflow-hidden"
+              >
+                <span className="p-2 font-bold text-[#FFFF00]">
+                  IN THE NEWS
+                </span>
+                <div className="flex flex-col overflow-hidden hover:overflow-y-scroll">
+                  {news?.map((newsItem) => (
+                    <div
+                      onClick={() => window.open(newsItem.linkToNews, "_blank")}
+                      className="flex items-center justify-between w-full py-3 border-b cursor-pointer"
+                    >
+                      <span className="2/3 line-clamp-3">{newsItem.title}</span>
+                      <img src={newsItem.imgSrc} className="w-1/3 " />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
