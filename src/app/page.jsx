@@ -239,13 +239,13 @@ const Page = () => {
             >
               <div
                 id="pros"
-                className="w-full rounded-[30px] bg-gradient-to-br hover:overflow-y-scroll overflow-hidden animate-pulse from-[#0f6f1263] to-[#021b0369] px-8 py-5 h-1/4 hover:h-auto transition-all"
+                className="w-full rounded-[30px] bg-gradient-to-br animate-pulse from-[#0f6f1263] to-[#021b0369] h-1/4 hover:h-auto transition-all"
               >
                 {/* PROS */}
               </div>
               <div
                 id="cons"
-                className="w-full rounded-[30px] animate-pulse px-8 bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 py-5 h-1/4 hover:h-auto hover:overflow-y-scroll overflow-hidden transition-all"
+                className="w-full rounded-[30px] animate-pulse bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 h-1/4 hover:h-auto transition-all"
               >
                 {/* CONS */}
               </div>
@@ -287,7 +287,7 @@ const Page = () => {
             >
               <div
                 id="about"
-                className="flex animate-pulse flex-col w-full rounded-[30px] bg-[#1414146c] p-3 md:h-1/2 md:max-h-1/2"
+                className="flex animate-pulse flex-col w-full rounded-[30px] bg-[#1414146c] p-3 h-1/2 md:max-h-1/2"
               >
                 {/* ABOUT */}
               </div>
@@ -298,7 +298,7 @@ const Page = () => {
                 {/* NEWS */}
               </div>
             </div>
-            <div
+            {/* <div
               id="proconsAndShare"
               className="md:hidden flex flex-col items-center md:w-1/4 text-[14px] min-h-full p-2"
             >
@@ -361,7 +361,7 @@ const Page = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         ) : chartData ? (
           <div className="flex flex-col md:flex-row w-full h-full max-h-full text-white text-[13px]">
