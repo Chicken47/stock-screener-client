@@ -239,13 +239,13 @@ const Page = () => {
             >
               <div
                 id="pros"
-                className="w-full rounded-[30px] bg-gradient-to-br animate-pulse from-[#0f6f1263] to-[#021b0369] h-1/4 hover:h-auto transition-all"
+                className="w-full rounded-[30px] bg-gradient-to-br animate-pulse from-[#0f6f1263] to-[#021b0369] h-1/4 transition-all"
               >
                 {/* PROS */}
               </div>
               <div
                 id="cons"
-                className="w-full rounded-[30px] animate-pulse bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 h-1/4 hover:h-auto transition-all"
+                className="w-full rounded-[30px] animate-pulse bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 h-1/4 transition-all"
               >
                 {/* CONS */}
               </div>
@@ -347,7 +347,7 @@ const Page = () => {
               </div>
               <div
                 id="sharePieChart"
-                className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 h-3/5 hover:h-full transition-all overflow-hidden"
+                className="w-full flex flex-col rounded-[30px] bg-[#141414] p-5 h-3/5 transition-all overflow-hidden"
               >
                 <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
                   SHAREHOLDING DATA
@@ -370,7 +370,7 @@ const Page = () => {
                       ))}
                     </Pie>
                     <Tooltip />
-                    <Legend verticalAlign="bottom" height={100} />
+                    <Legend verticalAlign="bottom" height={50} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
