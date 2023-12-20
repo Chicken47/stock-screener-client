@@ -585,7 +585,7 @@ const Page = () => {
                 <span className="sticky top-0 text-center w-full py-2 font-bold text-[18px] bg-[#FFFF00] text-black px-4 rounded-full">
                   ABOUT
                 </span>
-                <span className="text-[13px] w-full p-3 hover:overflow-y-scroll overflow-hidden">
+                <span className="text-[12px] md:text-[14px] w-full p-3 hover:overflow-y-scroll overflow-hidden">
                   {aboutText}
                 </span>
               </div>
@@ -597,6 +597,9 @@ const Page = () => {
                   IN THE NEWS
                 </span>
                 <div className="flex flex-col overflow-hidden hover:overflow-y-scroll">
+                  {news.length === 0 && (
+                    <span className="ml-2">Nothing to see here.</span>
+                  )}
                   {news?.map((newsItem) => (
                     <div
                       onClick={() => window.open(newsItem.linkToNews, "_blank")}
@@ -674,12 +677,15 @@ const Page = () => {
               </div>
               <div
                 id="news"
-                className="mt-2 rounded-[30px] md:hidden flex flex-col p-3 h-auto bg-[#121212] overflow-hidden"
+                className="mt-2 rounded-[30px] md:hidden flex w-full flex-col p-3 h-auto bg-[#121212] overflow-hidden"
               >
                 <span className="p-2 font-bold text-[#FFFF00]">
                   IN THE NEWS
                 </span>
-                <div className="flex flex-col overflow-hidden hover:overflow-y-scroll">
+                <div className="flex flex-col py-3 overflow-hidden hover:overflow-y-scroll">
+                  {news.length === 0 && (
+                    <span className="ml-2">Nothing to see here.</span>
+                  )}
                   {news?.map((newsItem) => (
                     <div
                       onClick={() => window.open(newsItem.linkToNews, "_blank")}
