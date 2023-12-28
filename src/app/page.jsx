@@ -245,7 +245,7 @@ const Page = () => {
               </div>
               <div
                 id="cons"
-                className="w-full rounded-[30px] animate-pulse bg-gradient-to-br from-[#810a0a5c] to-[#17060664] my-2 h-1/4 transition-all"
+                className="w-full rounded-[30px] animate-pulse bg-gradient-to-br from-[#810a0a5c] to-[#17060664]  h-1/4 transition-all"
               >
                 {/* CONS */}
               </div>
@@ -276,7 +276,7 @@ const Page = () => {
               </div>
               <div
                 id="chart"
-                className="w-full bg-[#1414146c] animate-pulse h-[70%] rounded-[30px] overflow-hidden flex flex-col"
+                className="w-full bg-[#1414146c] mt-2 animate-pulse h-[70%] rounded-[30px] overflow-hidden flex flex-col"
               >
                 {/* CHART */}
               </div>
@@ -293,7 +293,7 @@ const Page = () => {
               </div>
               <div
                 id="news"
-                className="mt-2 animate-pulse rounded-[30px] flex flex-col p-3 h-1/2 max-h-1/2 bg-[#1414146c] overflow-hidden"
+                className="mt-4 animate-pulse rounded-[30px] flex flex-col p-3 h-1/2 max-h-1/2 bg-[#1414146c] overflow-hidden"
               >
                 {/* NEWS */}
               </div>
@@ -470,7 +470,7 @@ const Page = () => {
               </div>
               <div
                 id="chart"
-                className="w-full bg-[#141414] h-[70%] rounded-[30px] overflow-hidden flex mt-5 md:mt-0 flex-col"
+                className="w-full bg-[#141414] h-[70%] rounded-[30px] overflow-hidden flex mt-2 md:mt-0 flex-col"
               >
                 <div className="w-full flex h-[15%] px-3 py-3 items-center justify-between">
                   <div className="flex px-2 bg-gray-800 rounded-full md:px-4">
